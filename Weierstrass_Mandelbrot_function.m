@@ -20,7 +20,7 @@ tic
 gamma = 1.5;
 D = 1.8; %Hausdorff-Besicovitch (fractal) dimension
 nmin = -100; nmax = 1500; %Range of sum
-Nx = 500; %No. x increments in range [0,1]
+Nx = 10000; %No. x increments in range [0,1]
 
 %Generate the set {phi_n} of uniformly distributed random numbers
 rng('default')
@@ -28,14 +28,9 @@ phi = 2*pi*rand(nmax-nmin+1,1);
 
 %Initialise arrays and evaluate WM function
 x = linspace(0,1,Nx);
-WMF = zeros(Nx,1);
-for i = 1:Nx
-    summand = zeros(nmax-nmin,1);
-    for n = nmin:nmax
-        summand(n-nmin+1) = gamma^(-n*(2-D))*(cos(phi(n-nmin+1))-cos((gamma^n)*x(i)+phi(n-nmin+1))); %Use 2x rand functions
-    end
-    WMF(i) = sum(summand);
-end
+n(:,1) = nmin:nmax;
+summand = gamma.^(-n*(2-D)).*(cos(phi)-cos((gamma.^n).*x+phi));
+WMF = sum(summand);
 
 %Plot WM function
 figure('Name','Weierstrass-Mandelbrot Function','NumberTitle','off');
